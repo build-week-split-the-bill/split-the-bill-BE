@@ -22,6 +22,34 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
     .catch(error => res.status(500).json({ error: error }));
 });
 
+// GET A USER BY ID
+router.get(
+  '/:id',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateUserId,
+  async (req, res) => {
+    try {
+      const {
+        user: { id },
+      } = req;
+
+      const user = await Users.findById(id);
+
+      res.status(200).json({
+        id: user.id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Error retrieving the user.',
+      });
+    }
+  },
+);
+
 // ADD A NEW USER
 router.post('/register', (req, res) => {
   let { email, password, firstname, lastname } = req.body;
@@ -81,7 +109,7 @@ router.post('/login', (req, res) => {
     });
 });
 
-// Get all post from a single user
+// GET ALL BILLS BY A USER ID
 router.get(
   '/:id/bills',
   ValidateMiddleware.validateUserId,
@@ -108,24 +136,29 @@ router.get(
 );
 
 // DELETE A USER
-router.delete('/:id', ValidateMiddleware.validateUserId, async (req, res) => {
-  try {
-    const {
-      user: { id },
-    } = req;
+router.delete(
+  '/:id',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateUserId,
+  async (req, res) => {
+    try {
+      const {
+        user: { id },
+      } = req;
 
-    const deleteUser = await Users.remove(id);
+      const deleteUser = await Users.remove(id);
 
-    res
-      .status(200)
-      .json({ message: `User with the id of ${id} was successfully deleted.` });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: `The user with the id of ${id} could not be deleted`,
-    });
-  }
-});
+      res.status(200).json({
+        message: `The user with the id of ${id} was successfully deleted.`,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: `The user with the id of ${id} could not be deleted.`,
+      });
+    }
+  },
+);
 
 // UPDATE A USER
 router.put(
@@ -161,7 +194,7 @@ function usersWithoutPassword(users) {
   return users.map(user => ({
     id: user.id,
     email: user.email,
-    firstanme: user.firstname,
+    firstname: user.firstname,
     lastname: user.lastname,
   }));
 }

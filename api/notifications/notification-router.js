@@ -20,23 +20,36 @@ router.get('/', async (req, res) => {
 router.post('/', (req, res) => {
   let { bill_id, email } = req.body;
 
-  if (bill_id && email && Object.keys(req.body).length == 2) {
-    Notification.add({ bill_id, email })
-      .then(newNotification => {
-        res.status(201).json({
-          id: newNotification.id,
-          bill_id: newNotification.bill_id,
-          email: newNotification.email,
+  if (
+    bill_id &&
+    email &&
+    Object.keys(req.body).length == 2 &&
+    Array.isArray(email)
+  ) {
+    console.log('SUCCESS');
+    let createdNotification = [];
+
+    email.forEach(email => {
+      Notification.add({ bill_id, email })
+        .then(newNotification => {
+          createdNotification.push({
+            id: newNotification.id,
+            bill_id: newNotification.bill_id,
+            email: newNotification.email,
+          });
+        })
+        .catch(error => {
+          res
+            .status(500)
+            .json(
+              'There was an error during the creation of a new notification. ' +
+                error,
+            );
         });
-      })
-      .catch(error => {
-        res
-          .status(500)
-          .json(
-            'There was an error during the creation of a new notification. ' +
-              error,
-          );
-      });
+    });
+    res
+      .status(201)
+      .json({ message: 'The notifications have been successfully persisted.' });
   } else {
     res
       .status(400)

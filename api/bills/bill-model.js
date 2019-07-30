@@ -4,6 +4,7 @@ module.exports = {
   find,
   findById,
   findBy,
+  findBillNotificaitons,
   add,
   update,
   remove,
@@ -25,6 +26,13 @@ function findBy(filter) {
     .where(filter)
     .first()
     .then(bill => (bill ? bill : null));
+}
+
+function findBillNotificaitons(bill_id) {
+  return db('notifications as n')
+    .join('bills as b', 'b.id', 'n.bill_id')
+    .select('n.id', 'n.email', 'n.bill_id')
+    .where('n.bill_id', bill_id);
 }
 
 function add(bill) {

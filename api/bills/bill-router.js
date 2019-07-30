@@ -2,12 +2,14 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const secrets = require('../../data/secrets/secret.js');
+const moment = require('moment');
 
 const Bills = require('./bill-model.js');
 
 const router = express.Router();
 
 const AuthMiddleware = require('../middleware/auth-middleware.js');
+const ValidateMiddleware = require('../middleware/validate-middleware.js');
 
 // GET ALL BILLS
 router.get('/', AuthMiddleware.restricted, async (req, res) => {
@@ -15,37 +17,155 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
     .then(bills => {
       res.status(200).json({
         bills: bills,
-        decodedToken: req.decodedToken,
+        /* decodedToken: req.decodedToken, */
       });
     })
     .catch(error => res.status(500).json({ error: error }));
 });
 
-// ADD A NEW BILL
-router.post('/', (req, res) => {
-  let { user_id, email } = req.body;
+// GET A BILL BY ID
+router.get(
+  '/:id',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateBillId,
+  async (req, res) => {
+    try {
+      const {
+        bill: { id },
+      } = req;
 
-  if (user_id && email) {
-    Bills.add({ user_id, email })
-      .then(newBill => {
-        res.status(201).json({
-          id: newBill.id,
-          user_id: newBill.user_id,
-          email: newBill.email,
-        });
-      })
-      .catch(error => {
-        res
-          .status(500)
-          .json(
-            'There was an error during the creation of a new bill. ' + error,
-          );
+      const bill = await Bills.findById(id);
+
+      res.status(200).json(bill);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: 'Error retrieving the bill.',
       });
-  } else {
-    res
-      .status(400)
-      .json('Not all information were provided to create a new bill.');
-  }
-});
+    }
+  },
+);
+
+// GET ALL NOTIFICATIONS BY A BILL ID
+router.get(
+  '/:id/notifications',
+  ValidateMiddleware.validateBillId,
+  async (req, res) => {
+    const {
+      bill: { id },
+    } = req;
+    try {
+      const userBills = await Bills.findBillNotificaitons(id);
+      if (userBills && userBills.length) {
+        res.status(200).json(userBills);
+      } else {
+        res.status(404).json({
+          message: `No bills available for the user with the id ${id}.`,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        error:
+          `There was an error retrieving this bills for the user with the id ${id}.` +
+          error,
+      });
+    }
+  },
+);
+
+// ADD A NEW BILL
+router.post(
+  '/',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateBill,
+  (req, res) => {
+    let { split_sum, split_people_count, user_id } = req.body;
+
+    if (split_sum && split_people_count && user_id) {
+      Bills.add({
+        split_sum,
+        split_people_count,
+        user_id,
+        created_at: moment().format('MMMM Do YYYY, h:mm:ss a'),
+      })
+        .then(newBill => {
+          res.status(201).json({
+            id: newBill.id,
+            user_id: newBill.user_id,
+            split_sum: newBill.split_sum,
+            split_people_count: newBill.split_people_count,
+            created_at: newBill.created_at,
+          });
+        })
+        .catch(error => {
+          res
+            .status(500)
+            .json(
+              'There was an error during the creation of a new bill. ' + error,
+            );
+        });
+    } else {
+      res
+        .status(400)
+        .json('Not all information were provided to create a new bill.');
+    }
+  },
+);
+
+// DELETE A USER
+router.delete(
+  '/:id',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateBillId,
+  async (req, res) => {
+    try {
+      const {
+        bill: { id },
+      } = req;
+
+      const deletedBill = await Bills.remove(id);
+
+      res.status(200).json({
+        message: `The bill with the id of ${id} was successfully deleted.`,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        message: `The bill with the id of ${id} could not be deleted.`,
+      });
+    }
+  },
+);
+
+// UPDATE A BILL
+router.put(
+  '/:id',
+  ValidateMiddleware.validateBill,
+  ValidateMiddleware.validateBillId,
+  async (req, res) => {
+    console.log('middleware: ', req.bill);
+    try {
+      const {
+        body: { user_id, split_sum, split_people_count },
+        bill: { id },
+      } = req;
+      console.log('STARTED');
+      const successFlag = await Bills.update(id, {
+        user_id,
+        split_sum,
+        split_people_count,
+      });
+      console.log('STOPPED');
+      return successFlag > 0
+        ? res.status(200).json({
+            message: `The bill with the id ${id} has been successfully updated!`,
+          })
+        : null;
+    } catch (error) {
+      res.status(500).json('weird');
+    }
+  },
+);
 
 module.exports = router;
