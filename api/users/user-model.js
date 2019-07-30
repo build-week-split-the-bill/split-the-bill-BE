@@ -4,6 +4,7 @@ module.exports = {
   find,
   findById,
   findBy,
+  findUserBills,
   findByUserEmail,
   add,
   update,
@@ -26,6 +27,20 @@ function findBy(filter) {
     .where(filter)
     .first()
     .then(user => (user ? user : null));
+}
+
+function findUserBills(userId) {
+  return db('bills as b')
+    .join('users as u', 'u.id', 'b.user_id')
+    .select(
+      'b.id',
+      'b.split_sum',
+      'b.split_people_count',
+      'b.created_at',
+      'b.user_id',
+      'u.email as user_email',
+    )
+    .where('b.user_id', userId);
 }
 
 function findByUserEmail(user_email) {

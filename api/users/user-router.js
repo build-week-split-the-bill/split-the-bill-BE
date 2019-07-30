@@ -8,6 +8,7 @@ const Users = require('./user-model.js');
 const router = express.Router();
 
 const AuthMiddleware = require('../middleware/auth-middleware.js');
+const ValidateMiddleware = require('../middleware/validate-middleware.js');
 
 // GET ALL USERS
 router.get('/', AuthMiddleware.restricted, async (req, res) => {
@@ -80,7 +81,81 @@ router.post('/login', (req, res) => {
     });
 });
 
-// HELPER FUNCTIONS
+// Get all post from a single user
+router.get(
+  '/:id/bills',
+  ValidateMiddleware.validateUserId,
+  async (req, res) => {
+    const {
+      user: { id },
+    } = req;
+    try {
+      const userBills = await Users.findUserBills(id);
+      if (userBills && userBills.length) {
+        res.status(200).json(userBills);
+      } else {
+        res.status(404).json({
+          message: `No bills available for the user with the id ${id}.`,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        error: `There was an error retrieving this bills for the user with the id ${id}.`,
+      });
+    }
+  },
+);
+
+// DELETE A USER
+router.delete('/:id', ValidateMiddleware.validateUserId, async (req, res) => {
+  try {
+    const {
+      user: { id },
+    } = req;
+
+    const deleteUser = await Users.remove(id);
+
+    res
+      .status(200)
+      .json({ message: `User with the id of ${id} was successfully deleted.` });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: `The user with the id of ${id} could not be deleted`,
+    });
+  }
+});
+
+// UPDATE A USER
+router.put(
+  '/:id',
+  ValidateMiddleware.validateUser,
+  ValidateMiddleware.validateUserId,
+  async (req, res) => {
+    console.log('middleware: ', req.user);
+    try {
+      const {
+        body: { email, password, firstname, lastname },
+        user: { id },
+      } = req;
+      const updatedUser = await Users.update(id, {
+        email,
+        firstname,
+        lastname,
+      });
+      return updatedUser > 0
+        ? res.status(200).json({
+            message: `The user with the id ${id} has been successfully updated!`,
+          })
+        : null;
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+);
+
+// UTILITY FUNCTIONS
 
 function usersWithoutPassword(users) {
   return users.map(user => ({
