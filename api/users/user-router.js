@@ -15,19 +15,11 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
     .then(users => {
       res.status(200).json({
         users: usersWithoutPassword(users),
-        decodedToken: req.decodedToken,
+        /* decodedToken: req.decodedToken, */
       });
     })
     .catch(error => res.status(500).json({ error: error }));
 });
-
-function usersWithoutPassword(users) {
-  return users.map(user => ({
-    id: user.id,
-    username: user.username,
-    department: user.department,
-  }));
-}
 
 // ADD A NEW USER
 router.post('/register', (req, res) => {
@@ -62,14 +54,21 @@ router.post('/register', (req, res) => {
 
 // LOGIN
 router.post('/login', (req, res) => {
-  let { username, password } = req.body;
+  let { email, password } = req.body;
 
-  Users.findByUsername(username)
+  Users.findByUserEmail(email)
     .then(user => {
+      console.log('USER', user);
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateJWT(user);
         res.status(200).json({
-          message: `Welcome ${user.username}`,
+          message: `The user ${user.email} successfully logged in!`,
+          user: {
+            id: user.id,
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+          },
           token: token,
         });
       } else {
@@ -81,10 +80,21 @@ router.post('/login', (req, res) => {
     });
 });
 
+// HELPER FUNCTIONS
+
+function usersWithoutPassword(users) {
+  return users.map(user => ({
+    id: user.id,
+    email: user.email,
+    firstanme: user.firstname,
+    lastname: user.lastname,
+  }));
+}
+
 function generateJWT(user) {
   const payload = {
     subject: user.id,
-    username: user.username,
+    email: user.email,
   };
 
   const options = {
@@ -93,22 +103,5 @@ function generateJWT(user) {
 
   return jwt.sign(payload, secrets.jwtSecret, options);
 }
-
-// LOGOUT
-router.get('/logout', (req, res) => {
-  if (req.session) {
-    req.session.destroy(error => {
-      error
-        ? res.json({
-            message: 'There was an error during the logout.',
-          })
-        : res.status(200).json({ message: 'Logout was successful!' });
-    });
-  } else {
-    res
-      .status(200)
-      .json({ message: 'Login did not happen. So logout is not necessary.' });
-  }
-});
 
 module.exports = router;
