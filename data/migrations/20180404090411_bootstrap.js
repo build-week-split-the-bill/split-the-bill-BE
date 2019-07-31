@@ -14,7 +14,7 @@ exports.up = function(knex) {
       bills.increments();
       bills.float('split_sum').notNullable();
       bills.integer('split_people_count').notNullable();
-      bills.timestamp('created_at').defaultTo(knex.fn.now());
+      bills.string('created_at').defaultTo(knex.fn.now());
       bills
         .integer('user_id')
         .unsigned()
