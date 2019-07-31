@@ -12,7 +12,7 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
     .then(notifications => {
       res.status(200).json({
         notifications: notifications,
-        decodedToken: req.decodedToken,
+        /* decodedToken: req.decodedToken, */
       });
     })
     .catch(error => res.status(500).json({ error: error }));
