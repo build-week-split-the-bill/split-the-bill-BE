@@ -31,4 +31,5 @@ function Requestlogger(req, res, next) {
   next();
 }
 
+/* "heroku-postbuild": "npm install --production && knex migrate:latest" */
 module.exports = server;

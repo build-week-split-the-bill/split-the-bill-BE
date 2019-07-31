@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "server": "nodemon index.js",
-    "heroku-postbuild": "npm install --production && knex migrate:latest"
+    "server": "nodemon index.js"
   },
   "repository": {
     "type": "git",
