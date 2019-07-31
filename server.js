@@ -15,7 +15,7 @@ server.use(helmet());
 server.use(cors());
 
 server.get('/', (req, res) => {
-  res.send(`Welcome to the API of Split The Bill!`);
+  res.send(`Welcome to the API of Split The Bill! ${process.env.DB_ENV}`);
 });
 
 server.use('/api/users', UsersRouter);
