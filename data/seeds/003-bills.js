@@ -2,7 +2,7 @@ const moment = require('moment');
 
 exports.seed = function(knex) {
   return knex('bills')
-    .truncate()
+    .del()
     .then(function() {
       return knex('bills').insert([
         {

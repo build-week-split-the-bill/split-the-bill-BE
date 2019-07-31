@@ -1,6 +1,6 @@
 exports.seed = function(knex) {
   return knex('notifications')
-    .truncate()
+    .del()
     .then(function() {
       return knex('notifications').insert([
         {
