@@ -40,7 +40,7 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists('users')
+    .dropTableIfExists('notifications')
     .dropTableIfExists('bills')
-    .dropTableIfExists('notifications');
+    .dropTableIfExists('users');
 };
