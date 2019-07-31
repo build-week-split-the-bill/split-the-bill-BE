@@ -112,6 +112,7 @@ router.post('/login', (req, res) => {
 // GET ALL BILLS BY A USER ID
 router.get(
   '/:id/bills',
+  AuthMiddleware.restricted,
   ValidateMiddleware.validateUserId,
   async (req, res) => {
     const {
@@ -163,6 +164,7 @@ router.delete(
 // UPDATE A USER
 router.put(
   '/:id',
+  AuthMiddleware.restricted,
   ValidateMiddleware.validateUser,
   ValidateMiddleware.validateUserId,
   async (req, res) => {

@@ -49,6 +49,7 @@ router.get(
 // GET ALL NOTIFICATIONS BY A BILL ID
 router.get(
   '/:id/notifications',
+  AuthMiddleware.restricted,
   ValidateMiddleware.validateBillId,
   async (req, res) => {
     const {

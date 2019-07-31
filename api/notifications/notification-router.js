@@ -4,8 +4,10 @@ const Notification = require('./notification-model.js');
 
 const router = express.Router();
 
+const AuthMiddleware = require('../middleware/auth-middleware.js');
+
 // GET ALL NOTIFICATIONS
-router.get('/', async (req, res) => {
+router.get('/', AuthMiddleware.restricted, async (req, res) => {
   Notification.find()
     .then(notifications => {
       res.status(200).json({
@@ -17,7 +19,7 @@ router.get('/', async (req, res) => {
 });
 
 // ADD A NEW NOTIFICATION
-router.post('/', (req, res) => {
+router.post('/', AuthMiddleware.restricted, (req, res) => {
   let { bill_id, email } = req.body;
 
   if (
