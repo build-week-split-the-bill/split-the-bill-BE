@@ -173,6 +173,10 @@ router.put(
             error: `An error occurred within the database thus the user with the id ${id} could not be updated.`,
           });
     } catch (error) {
+      const {
+        user: { id },
+      } = req;
+
       res.status(500).json({
         error: `An error occurred during updating the user with the id ${id}.`,
       });

@@ -20,7 +20,241 @@ Split the bill provides a web application where people can easily calculate how 
 - [MDBReact](https://mdbootstrap.com/) - Material Design Bootstrap Framework for React
 - [Axios-Progress-Bar](https://www.npmjs.com/package/axios-progress-bar) - A library to incluse a progress bar into the webpage that makes visualizes to the user after a HTTP request how long it will take for him to wait.
 
-## Endpoints
+# Endpoints
+
+### General
+
+##### <span style="color:blue">GET [API RUNNING]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/
+```
+
+- JWT protected (header) :x:
+- payload (body) :x:
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+Welcome to the production environment API of Split The Bill!
+```
+
+### USERS
+
+##### <span style="color:blue">GET [ALL USERS]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/users
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- No passwords are returned they are not even stored in the database directly
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "users": [
+        {
+            "id": 1,
+            "email": "sascha.majewsky@pm.me",
+            "firstname": "sascha",
+            "lastname": "majewsky"
+        },
+        {
+            "id": 2,
+            "email": "hanne.xxx@pm.me",
+            "firstname": "hanne",
+            "lastname": "xxx"
+        }
+    ]
+}
+```
+
+##### <span style="color:blue">GET [AN USER BY ID]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/users/1
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- ID is defined over the used route at the end
+- No passwords are returned they are not even stored in the database directly
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "id": 1,
+    "email": "sascha.majewsky@pm.me",
+    "firstname": "sascha",
+    "lastname": "majewsky"
+}
+```
+
+##### <span style="color:blue">GET [BILLS OF AN USER BY ID]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/users/3/bills
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- ID is defined over the used route at the end
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    [
+        {
+            "id": 1,
+            "split_sum": 15.73,
+            "split_people_count": 3,
+            "created_at": "July 31st 2019, 11:39:09 pm",
+            "user_id": 1,
+            "user_email": "sascha.majewsky@pm.me"
+        },
+        {
+            "id": 30,
+            "split_sum": 15.5662,
+            "split_people_count": 3,
+            "created_at": "August 1st 2019, 12:41:14 pm",
+            "user_id": 1,
+            "user_email": "sascha.majewsky@pm.me"
+        },
+    ]
+}
+```
+
+<span style="color:red">Example Response (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "No bills are available for the user with the id 3."
+}
+```
+
+##### <span style="color:blue">POST [REGISTER AN USER]</span>
+
+https://split-the-bill-postgres.herokuapp.com/api/users/register
+
+- JWT protected (header) :x:
+- payload (body) :heavy_check_mark:
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"email": "kevin@test.com",
+	"password": "correcthorsebatterystaple",
+	"firstname": "kevin",
+	"lastname": "tou"
+}
+```
+
+<span style="color:red">Example Response (201 CREATED)</span>:
+
+```
+{
+    "id": 15,
+    "email": "kevin@test.com",
+    "firstname": "kevin",
+    "lastname": "tou"
+}
+```
+
+<span style="color:red">Example Response (500 SERVER ERROR)</span>:
+
+```
+{
+"error": "An error occurred during the creation of a new user."
+}
+```
+
+##### <span style="color:blue">POST [LOGIN AN USER]</span>
+
+```
+
+https://split-the-bill-postgres.herokuapp.com/api/users/login
+
+```
+
+- JWT protected (header) :x:
+- payload (body) :heavy_check_mark:
+
+<span style="color:green">Example Request</span>:
+
+```
+
+{
+    "email": "kevin@test.com",
+	"password": "correcthorsebatterystaple"
+}
+
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The user kevin@test.com successfully logged in!",
+    "user": {
+        "id": 11,
+        "email": "kevin@test.com",
+        "firstname": "kevin",
+        "lastname": "tou"
+    },
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxMSwiZW1haWwiOiJrZXZpbkB0ZXN0LmNvbTY2NiIsImlhdCI6MTU2NDY4MTc1MCwiZXhwIjoxNTY0Njg1MzUwfQ.-DGabIPf9dXG38gx3t5Jq3xXwHzWLUwv1Zum0G_nkeE"
+}
+```
+
+<span style="color:red">Example Response (401 UNAUTHORIZED)</span>:
+
+```
+{
+    "warning": "Invalid credentials submitted for the login of an user."
+}
+```
+
+##### <span style="color:blue">PUT [UPDATE AN USER]</span>
+
+```
+
+https://split-the-bill-postgres.herokuapp.com/api/users/4
+
+```
+
+- JWT protected (header) :x:
+- payload (body) :heavy_check_mark:
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"email": "changeduser@test.com",
+	"firstname": "garry",
+	"lastname": "squarepants"
+}
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The user with the id 4 has been successfully updated!"
+}
+```
+
+<span style="color:red">Example Response (401 UNAUTHORIZED)</span>:
+
+```
+{
+    "warning": "Invalid credentials submitted for the login of an user."
+}
+```
 
 #### Middleware
 
@@ -75,11 +309,14 @@ For the design aspect the group had a UX Design student dedicated to it who prov
 
 ## Authors
 
-**Role: Frontend Developer**
+**Role: Backend Developer**
 
-- **[Jeff Oliver](https://github.com/codeOfTheFuture)**
 - **[Sascha Majewsky](https://github.com/SaschaMajewsky)**
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+```
+
+```
