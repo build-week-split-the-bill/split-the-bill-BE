@@ -65,6 +65,9 @@ router.get(
         });
       }
     } catch (error) {
+      const {
+        bill: { id },
+      } = req;
       console.log(error);
       res.status(500).json({
         error:
@@ -131,9 +134,12 @@ router.delete(
         message: `The bill with the id of ${id} was successfully deleted.`,
       });
     } catch (error) {
+      const {
+        bill: { id },
+      } = req;
       console.log(error);
       res.status(500).json({
-        message: `The bill with the id of ${id} could not be deleted.`,
+        message: `The bill with the id of ${id} could not be deleted.` + error,
       });
     }
   },

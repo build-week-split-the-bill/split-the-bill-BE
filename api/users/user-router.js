@@ -128,6 +128,9 @@ router.get(
         });
       }
     } catch (error) {
+      const {
+        user: { id },
+      } = req;
       console.log(error);
       res.status(500).json({
         error: `There was an error retrieving this bills for the user with the id ${id}.`,
@@ -153,6 +156,9 @@ router.delete(
         message: `The user with the id of ${id} was successfully deleted.`,
       });
     } catch (error) {
+      const {
+        user: { id },
+      } = req;
       console.log(error);
       res.status(500).json({
         message: `The user with the id of ${id} could not be deleted.`,
