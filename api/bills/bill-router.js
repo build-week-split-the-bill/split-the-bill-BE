@@ -5,7 +5,7 @@ const secrets = require('../../data/secrets/secret.js');
 const moment = require('moment');
 
 const Bills = require('./bill-model.js');
-const Notification = require('./notification-model.js');
+const Notification = require('../notifications/notification-model.js');
 
 const router = express.Router();
 

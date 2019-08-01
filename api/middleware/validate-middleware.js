@@ -96,7 +96,7 @@ function validateNotification(req, res, next) {
   }
 }
 
-async function validateBillId(req, res, next) {
+async function validateNotificationId(req, res, next) {
   try {
     const {
       params: { id },
