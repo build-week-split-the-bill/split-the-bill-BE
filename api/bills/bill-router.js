@@ -1,7 +1,4 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const secrets = require('../../data/secrets/secret.js');
 const moment = require('moment');
 
 const Bills = require('./bill-model.js');
@@ -21,7 +18,12 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
         /* decodedToken: req.decodedToken, */
       });
     })
-    .catch(error => res.status(500).json({ error: error }));
+    .catch(error =>
+      res.status(500).json({
+        error:
+          'An error occurred during fetching all bills. That one is on us!',
+      }),
+    );
 });
 
 // GET A BILL BY ID
@@ -39,9 +41,12 @@ router.get(
 
       res.status(200).json(bill);
     } catch (error) {
-      console.log(error);
+      const {
+        bill: { id },
+      } = req;
+
       res.status(500).json({
-        message: 'Error retrieving the bill.',
+        error: `An error occurred during fetching a bill with the id ${id}.`,
       });
     }
   },
@@ -72,16 +77,14 @@ router.post(
           });
         })
         .catch(error => {
-          res
-            .status(500)
-            .json(
-              'There was an error during the creation of a new bill. ' + error,
-            );
+          res.status(500).json({
+            error: 'An error occurred during the creation of a new bill.',
+          });
         });
     } else {
-      res
-        .status(400)
-        .json('Not all information were provided to create a new bill.');
+      res.status(400).json({
+        warning: 'Not all information were provided to create a new bill.',
+      });
     }
   },
 );
@@ -106,9 +109,9 @@ router.delete(
       const {
         bill: { id },
       } = req;
-      console.log(error);
+
       res.status(500).json({
-        message: `The bill with the id of ${id} could not be deleted.` + error,
+        message: `An error occurred during deletion of a bill with the id ${id}.`,
       });
     }
   },
@@ -120,26 +123,29 @@ router.put(
   ValidateMiddleware.validateBill,
   ValidateMiddleware.validateBillId,
   async (req, res) => {
-    console.log('middleware: ', req.bill);
     try {
       const {
         body: { user_id, split_sum, split_people_count },
         bill: { id },
       } = req;
-      console.log('STARTED');
+
       const successFlag = await Bills.update(id, {
         user_id,
         split_sum,
         split_people_count,
       });
-      console.log('STOPPED');
+
       return successFlag > 0
         ? res.status(200).json({
             message: `The bill with the id ${id} has been successfully updated!`,
           })
-        : null;
+        : res.status(500).json({
+            error: `An error occurred within the database thus the bill with the id ${id} could not be updated.`,
+          });
     } catch (error) {
-      res.status(500).json('weird');
+      res.status(500).json({
+        error: `An error occurred during updating the bill with the id ${id}.`,
+      });
     }
   },
 );
@@ -153,24 +159,23 @@ router.get(
     const {
       bill: { id },
     } = req;
+
     try {
-      const userBills = await Bills.findBillNotificaitons(id);
+      const userBills = await Bills.findBillNotifications(id);
       if (userBills && userBills.length) {
         res.status(200).json(userBills);
       } else {
         res.status(404).json({
-          message: `No bills available for the user with the id ${id}.`,
+          info: `No bills available for the user with the id ${id}.`,
         });
       }
     } catch (error) {
       const {
         bill: { id },
       } = req;
-      console.log(error);
+
       res.status(500).json({
-        error:
-          `There was an error retrieving this bills for the user with the id ${id}.` +
-          error,
+        error: `An error occurred during retrieving the bills for the user with the id ${id}.`,
       });
     }
   },
@@ -186,29 +191,31 @@ router.delete(
       const {
         bill: { id },
       } = req;
-      const billNotifications = await Bills.findBillNotificaitons(id);
+
+      const billNotifications = await Bills.findBillNotifications(id);
 
       if (billNotifications && billNotifications.length) {
         billNotifications.forEach(notification => {
           Notification.remove(notification.id)
             .then(newNotification =>
-              console.log('deleted a notification success' + newNotification),
+              console.log(
+                'deleted a notification successfully ' + newNotification,
+              ),
             )
             .catch(error => {
               res
                 .status(500)
                 .json(
-                  'There was an error during the deletion of new notifications. ' +
-                    error,
+                  'An error occurred during deleting some of the notifications for the bill.',
                 );
             });
         });
         res.status(200).json({
-          message: `The notifications for the bill with the id of ${id} were successfully deleted.`,
+          message: `The notification(s) for the bill with the id of ${id} were successfully deleted.`,
         });
       } else {
-        res.status(202).json({
-          message: `The bill of the id ${id} does not contain any notifications.`,
+        res.status(404).json({
+          info: `The bill of the id ${id} does not contain any notifications.`,
         });
       }
     } catch (error) {
@@ -217,7 +224,7 @@ router.delete(
       } = req;
       console.log(error);
       res.status(500).json({
-        message: `The notifications of the bill with the id of ${id} could not be deleted.`,
+        message: `An error occurred during the deletion for notifications for the bill with the id ${id}.`,
       });
     }
   },

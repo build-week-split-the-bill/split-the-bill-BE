@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const secret = require("../../data/secrets/secret.js");
+const jwt = require('jsonwebtoken');
+const secret = require('../../data/secrets/secret.js');
 
 module.exports = {
-  restricted
+  restricted,
 };
 
 function restricted(req, res, next) {
@@ -10,7 +10,9 @@ function restricted(req, res, next) {
 
   jwt.verify(token, secret.jwtSecret, (error, decodedToken) => {
     error
-      ? res.status(401).json({ error: "Authorization failed. Access denied!" })
+      ? res
+          .status(401)
+          .json({ warning: 'Authorization failed. Access denied!' })
       : ((req.decodedToken = decodedToken), next());
   });
 }

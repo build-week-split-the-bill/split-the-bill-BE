@@ -15,7 +15,12 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
         /* decodedToken: req.decodedToken, */
       });
     })
-    .catch(error => res.status(500).json({ error: error }));
+    .catch(error =>
+      res.status(500).json({
+        error:
+          'An error occurred during fetching all notifications. That one is on us!',
+      }),
+    );
 });
 
 // ADD A NEW NOTIFICATION
@@ -28,7 +33,6 @@ router.post('/', AuthMiddleware.restricted, (req, res) => {
     Object.keys(req.body).length == 2 &&
     Array.isArray(email)
   ) {
-    console.log('SUCCESS');
     let createdNotification = [];
 
     email.forEach(email => {
@@ -41,21 +45,19 @@ router.post('/', AuthMiddleware.restricted, (req, res) => {
           });
         })
         .catch(error => {
-          res
-            .status(500)
-            .json(
-              'There was an error during the creation of a new notification. ' +
-                error,
-            );
+          res.status(500).json({
+            error: 'An error occurred during creating a new notification. ',
+          });
         });
     });
     res
       .status(201)
       .json({ message: 'The notifications have been successfully persisted.' });
   } else {
-    res
-      .status(400)
-      .json('Not all information were provided to create a new notification.');
+    res.status(400).json({
+      warning:
+        'Not all information were provided to create a new notification.',
+    });
   }
 });
 

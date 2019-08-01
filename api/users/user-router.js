@@ -19,7 +19,12 @@ router.get('/', AuthMiddleware.restricted, async (req, res) => {
         /* decodedToken: req.decodedToken, */
       });
     })
-    .catch(error => res.status(500).json({ error: error }));
+    .catch(error =>
+      res.status(500).json({
+        error:
+          'An error occurred during fetching all users. That one is on us!',
+      }),
+    );
 });
 
 // GET A USER BY ID
@@ -42,9 +47,12 @@ router.get(
         lastname: user.lastname,
       });
     } catch (error) {
-      console.log(error);
+      const {
+        user: { id },
+      } = req;
+
       res.status(500).json({
-        message: 'Error retrieving the user.',
+        error: `An error occurred during fetching an user with the id ${id}.`,
       });
     }
   },
@@ -68,26 +76,23 @@ router.post('/register', (req, res) => {
         });
       })
       .catch(error => {
-        res
-          .status(500)
-          .json(
-            'There was an error during the creation of a new user. ' + error,
-          );
+        res.status(500).json({
+          error: 'An error occurred during the creation of a new user.',
+        });
       });
   } else {
-    res
-      .status(400)
-      .json('Not all information were provided to create a new user.');
+    res.status(400).json({
+      warning: 'Not all information were provided to create a new user.',
+    });
   }
 });
 
-// LOGIN
+// LOGIN A USER
 router.post('/login', (req, res) => {
   let { email, password } = req.body;
 
   Users.findByUserEmail(email)
     .then(user => {
-      console.log('USER', user);
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = generateJWT(user);
         res.status(200).json({
@@ -101,45 +106,19 @@ router.post('/login', (req, res) => {
           token: token,
         });
       } else {
-        res.status(401).json({ message: 'Invalid credentials submitted.' });
+        res.status(401).json({
+          warning: 'Invalid credentials submitted for the login of an user.',
+        });
       }
     })
     .catch(error => {
-      res.status(500).json(error);
+      res
+        .status(500)
+        .json({ error: 'An error occurred during logging in an user.' });
     });
 });
 
-// GET ALL BILLS BY A USER ID
-router.get(
-  '/:id/bills',
-  AuthMiddleware.restricted,
-  ValidateMiddleware.validateUserId,
-  async (req, res) => {
-    const {
-      user: { id },
-    } = req;
-    try {
-      const userBills = await Users.findUserBills(id);
-      if (userBills && userBills.length) {
-        res.status(200).json(userBills);
-      } else {
-        res.status(404).json({
-          message: `No bills available for the user with the id ${id}.`,
-        });
-      }
-    } catch (error) {
-      const {
-        user: { id },
-      } = req;
-      console.log(error);
-      res.status(500).json({
-        error: `There was an error retrieving this bills for the user with the id ${id}.`,
-      });
-    }
-  },
-);
-
-// DELETE A USER
+/* // DELETE A USER
 router.delete(
   '/:id',
   AuthMiddleware.restricted,
@@ -165,7 +144,7 @@ router.delete(
       });
     }
   },
-);
+); */
 
 // UPDATE A USER
 router.put(
@@ -180,24 +159,59 @@ router.put(
         body: { email, password, firstname, lastname },
         user: { id },
       } = req;
-      const updatedUser = await Users.update(id, {
+
+      const successFlag = await Users.update(id, {
         email,
         firstname,
         lastname,
       });
-      return updatedUser > 0
+      return successFlag > 0
         ? res.status(200).json({
             message: `The user with the id ${id} has been successfully updated!`,
           })
-        : null;
+        : res.status(500).json({
+            error: `An error occurred within the database thus the user with the id ${id} could not be updated.`,
+          });
     } catch (error) {
-      res.status(500).json(error);
+      res.status(500).json({
+        error: `An error occurred during updating the user with the id ${id}.`,
+      });
+    }
+  },
+);
+
+// GET ALL BILLS BY A USER ID
+router.get(
+  '/:id/bills',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateUserId,
+  async (req, res) => {
+    const {
+      user: { id },
+    } = req;
+
+    try {
+      const userBills = await Users.findUserBills(id);
+      if (userBills && userBills.length) {
+        res.status(200).json(userBills);
+      } else {
+        res.status(404).json({
+          info: `No bills are available for the user with the id ${id}.`,
+        });
+      }
+    } catch (error) {
+      const {
+        user: { id },
+      } = req;
+
+      res.status(500).json({
+        error: `An error occurred retrieving the bills for the user with the id ${id}.`,
+      });
     }
   },
 );
 
 // UTILITY FUNCTIONS
-
 function usersWithoutPassword(users) {
   return users.map(user => ({
     id: user.id,

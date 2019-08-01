@@ -4,7 +4,7 @@ module.exports = {
   find,
   findById,
   findBy,
-  findBillNotificaitons,
+  findBillNotifications,
   add,
   update,
   remove,
@@ -28,7 +28,7 @@ function findBy(filter) {
     .then(bill => (bill ? bill : null));
 }
 
-function findBillNotificaitons(bill_id) {
+function findBillNotifications(bill_id) {
   return db('notifications as n')
     .join('bills as b', 'b.id', 'n.bill_id')
     .select('n.id', 'n.email', 'n.bill_id')

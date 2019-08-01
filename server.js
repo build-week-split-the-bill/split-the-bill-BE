@@ -15,14 +15,16 @@ server.use(helmet());
 server.use(cors());
 
 server.get('/', (req, res) => {
-  res.send(`Welcome to the API of Split The Bill! ${process.env.DB_ENV}`);
+  res.send(
+    `Welcome to the ${process.env.DB_ENV} environment API of Split The Bill!`,
+  );
 });
 
 server.use('/api/users', UsersRouter);
 server.use('/api/bills', BillsRouter);
 server.use('/api/notifications', NotificationsRouter);
 
-// custom logging middleware
+// Custom logging middleware for incoming requests
 function Requestlogger(req, res, next) {
   console.log(
     `${req.method} to http://localhost/5000${req.path} at `,
@@ -31,5 +33,7 @@ function Requestlogger(req, res, next) {
   next();
 }
 
+// This line might come in handy as a start script for the heroku postgres deployment
 /* "heroku-postbuild": "npm install --production && knex migrate:latest" */
+
 module.exports = server;
