@@ -139,7 +139,9 @@ https://split-the-bill-postgres.herokuapp.com/api/users/3/bills
 
 ##### <span style="color:blue">POST [REGISTER AN USER]</span>
 
+```
 https://split-the-bill-postgres.herokuapp.com/api/users/register
+```
 
 - JWT protected (header) :x:
 - payload (body) :heavy_check_mark:
