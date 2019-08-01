@@ -51,7 +51,7 @@ router.post(
           })
           .catch(error => {
             res.status(500).json({
-              error: 'An error occurred during creating a new notification. ',
+              error: 'An error occurred during creating a new notification.',
             });
           });
       });

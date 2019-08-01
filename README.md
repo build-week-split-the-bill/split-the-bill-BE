@@ -33,7 +33,7 @@ https://split-the-bill-postgres.herokuapp.com/
 - JWT protected (header) :x:
 - payload (body) :x:
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">API Running Response (200 OK)</span>:
 
 ```
 Welcome to the production environment API of Split The Bill!
@@ -52,7 +52,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users
 - Authorization gets validated over restricted middleware - extra responses below
 - No passwords are returned they are not even stored in the database directly
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Found users Response (200 OK)</span>:
 
 ```
 {
@@ -73,7 +73,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users
 }
 ```
 
-<span style="color:red">Example Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -94,7 +94,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/1
 - USER ID gets validated over validateUserId middleware - extra responses below
 - No passwords are returned they are not even stored in the database directly
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Found user Response (200 OK)</span>:
 
 ```
 {
@@ -105,7 +105,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/1
 }
 ```
 
-<span style="color:red">Example Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -133,7 +133,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/register
 }
 ```
 
-<span style="color:red">Created User Response (201 CREATED)</span>:
+<span style="color:red">Created user Response (201 CREATED)</span>:
 
 ```
 {
@@ -197,7 +197,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/login
 }
 ```
 
-<span style="color:red">Example Response (401 UNAUTHORIZED)</span>:
+<span style="color:red">Invalid credentials Response (401 UNAUTHORIZED)</span>:
 
 ```
 {
@@ -237,7 +237,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 }
 ```
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Updated user Response (200 OK)</span>:
 
 ```
 {
@@ -245,7 +245,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 }
 ```
 
-<span style="color:red">Database Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Database error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -253,7 +253,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -273,7 +273,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/3/bills
 - USER ID gets validated over validateUserId middleware - extra responses below
 - ID is defined over the used route at the end
 
-<span style="color:red">Found Bills Response (200 OK)</span>:
+<span style="color:red">Found bills Response (200 OK)</span>:
 
 ```
 {
@@ -306,7 +306,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/3/bills
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -326,7 +326,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills
 - payload (body) :x:
 - Authorization gets validated over restricted middleware - extra responses below
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Found bills Response (200 OK)</span>:
 
 ```
 {
@@ -349,7 +349,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -369,7 +369,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2
 - Authorization gets validated over restricted middleware - extra responses below
 - BILL ID gets validated over validateBillId middleware - extra responses below
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Found bill Response (200 OK)</span>:
 
 ```
 {
@@ -381,7 +381,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -410,7 +410,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/
 }
 ```
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">New bill Response (200 OK)</span>:
 
 ```
 {
@@ -430,7 +430,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -450,7 +450,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/15
 - Authorization gets validated over restricted middleware - extra responses below
 - BILL ID gets validated over validateBillId middleware - extra responses below
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Bill deletion Response (200 OK)</span>:
 
 ```
 {
@@ -458,7 +458,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/15
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -489,7 +489,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/4
 }
 ```
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Updated bill Response (200 OK)</span>:
 
 ```
 {
@@ -497,7 +497,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/4
 }
 ```
 
-<span style="color:red">Database Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Database error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -505,7 +505,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/4
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -525,7 +525,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2/notifications
 - Authorization gets validated over restricted middleware - extra responses below
 - BILL ID gets validated over validateBillId middleware - extra responses below
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Found notifications for bill Response (200 OK)</span>:
 
 ```
 [
@@ -542,7 +542,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2/notifications
 ]
 ```
 
-<span style="color:red">Example Response (404 NOT FOUND)</span>:
+<span style="color:red">No notifications found Response (404 NOT FOUND)</span>:
 
 ```
 {
@@ -550,7 +550,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2/notifications
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -570,7 +570,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/31/notifications
 - Authorization gets validated over restricted middleware - extra responses below
 - BILL ID gets validated over validateBillId middleware - extra responses below
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Deletion notifications Response (200 OK)</span>:
 
 ```
 {
@@ -578,7 +578,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/31/notifications
 }
 ```
 
-<span style="color:red">Example Response (404 NOT FOUND)</span>:
+<span style="color:red">No notifications to delete found Response (404 NOT FOUND)</span>:
 
 ```
 {
@@ -586,7 +586,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/31/notifications
 }
 ```
 
-<span style="color:red">Database Error Deletion of a notification Response (500 SERVER ERROR)</span>:
+<span style="color:red">Database error deletion of a notification Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -594,7 +594,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/31/notifications
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -614,7 +614,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 - payload (body) :x:
 - Authorization gets validated over restricted middleware - extra responses below
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Notifications found Response (200 OK)</span>:
 
 ```
 {
@@ -633,7 +633,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -660,7 +660,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 }
 ```
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Created notifications Response (200 OK)</span>:
 
 ```
 {
@@ -668,7 +668,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 }
 ```
 
-<span style="color:red">Notificaiton info not complete Response (400 BAD REQUEST)</span>:
+<span style="color:red">Notification info not complete Response (400 BAD REQUEST)</span>:
 
 ```
 {
@@ -676,7 +676,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 }
 ```
 
-<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+<span style="color:red">Server error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -714,6 +714,88 @@ Whenever for a route a certain ID or Resource object like a user is required the
 ```
 {
     "warning": "Missing required email or firstname or lastname information for an user."
+}
+```
+
+<span style="color:red">User ID validation user not found (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "The user with the id 3 was not found during validation."
+}
+```
+
+<span style="color:red">User ID validation server error (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during validation of the user."
+}
+```
+
+<span style="color:red">Bill validation no body data (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing bill data entirely."
+}
+```
+
+<span style="color:red">Bill validation bill data not complete (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing required split_sum or split_people_count or user_id information for a bill."
+}
+```
+
+<span style="color:red">Bill ID validation bill not found (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "The bill with the id 3 was not found during validation."
+}
+```
+
+<span style="color:red">Bill ID validation server error (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during validating of a bill."
+}
+```
+
+---
+
+<span style="color:red">Notification validation no body data (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing notification data entirely."
+}
+```
+
+<span style="color:red">Notification validation notification data not complete (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing required email or bill_id information for a notification."
+}
+```
+
+<span style="color:red">Notification ID validation notification not found (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "The notification with the id 3 was not found during validation."
+}
+```
+
+<span style="color:red">Notification ID validation server error (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during validation of a notification."
 }
 ```
 
