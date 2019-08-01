@@ -227,7 +227,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 
 ```
 
-- JWT protected (header) :x:
+- JWT protected (header) :heavy_check_mark:
 - payload (body) :heavy_check_mark:
 
 <span style="color:green">Example Request</span>:
@@ -244,15 +244,265 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 
 ```
 {
-    "message": "The user with the id 4 has been successfully updated!"
+    "message": "The user with the id 1 has been successfully updated!"
 }
 ```
 
-<span style="color:red">Example Response (401 UNAUTHORIZED)</span>:
+<span style="color:red">Example Response (400 BAD REQUEST)</span>:
 
 ```
 {
-    "warning": "Invalid credentials submitted for the login of an user."
+    "warning": "Missing required email or firstname or lastname information for an user."
+}
+```
+
+### BILLS
+
+##### <span style="color:blue">GET [ALL BILLS]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "bills": [
+        {
+            "id": 1,
+            "split_sum": 15.73,
+            "split_people_count": 3,
+            "created_at": "July 31st 2019, 11:39:09 pm",
+            "user_id": 1
+        },
+        {
+            "id": 2,
+            "split_sum": 33.35,
+            "split_people_count": 2,
+            "created_at": "July 31st 2019, 11:39:09 pm",
+            "user_id": 2
+        }
+    ]
+}
+```
+
+##### <span style="color:blue">GET [A BILL BY ID]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/2
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- ID is defined over the used route at the end
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "id": 2,
+    "split_sum": 33.35,
+    "split_people_count": 2,
+    "created_at": "July 31st 2019, 11:39:09 pm",
+    "user_id": 2
+}
+```
+
+##### <span style="color:blue">GET [NOTIFICATIONS OF A BILL BY ID]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/2/notifications
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- ID is defined over the used route at the end
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+[
+    {
+        "id": 1,
+        "email": "sascha@test.com",
+        "bill_id": 1
+    },
+    {
+        "id": 3,
+        "email": "anotherfriend@test.com",
+        "bill_id": 1
+    }
+]
+```
+
+<span style="color:red">Example Response (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "No bills available for the user with the id 2."
+}
+```
+
+##### <span style="color:blue">POST [A NEW BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :heavy_check_mark:
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"user_id": 1,
+	"split_sum": 15.56618455214584,
+	"split_people_count": 3
+}
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "id": 51,
+    "user_id": 1,
+    "split_sum": 15.5662,
+    "split_people_count": 3,
+    "created_at": "August 1st 2019, 6:19:19 pm"
+}
+```
+
+##### <span style="color:blue">PUT [UPDATE A BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/4
+
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :heavy_check_mark:
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"split_sum": 400.22,
+    "split_people_count": 2,
+	"user_id": 1
+}
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The bill with the id 2 has been successfully updated!"
+}
+```
+
+<span style="color:red">Example Response (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing required split_sum or split_people_count or user_id information for a bill."
+}
+```
+
+##### <span style="color:blue">DELETE [A BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/15
+
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The bill with the id of 2 was successfully deleted."
+}
+```
+
+##### <span style="color:blue">DELETE [ALL NOTIFICATIONS OF A BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/31/notifications
+
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The notification(s) for the bill with the id of 52 were successfully deleted."
+}
+```
+
+### NOTIFICATIONS
+
+##### <span style="color:blue">GET [ALL NOTIFICATIONS]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/notifications
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "notifications": [
+        {
+            "id": 1,
+            "email": "sascha@test.com",
+            "bill_id": 1
+        },
+        {
+            "id": 3,
+            "email": "anotherfriend@test.com",
+            "bill_id": 1
+        }
+    ]
+}
+```
+
+##### <span style="color:blue">POST [AN ARRAY OF NOTIFICATIONS]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/notifications
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :heavy_check_mark:
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"bill_id": 52,
+	"email": ["friend_one@test.com", "friend_two@test.com", "friend_three@test.com"]
+}
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The notification(s) have been successfully persisted."
 }
 ```
 
@@ -264,6 +514,30 @@ Middleware is divided into 2 different types:
 - Middleware that validates requests payloads.
 
 Whenever for a route a certain ID or Resource object like a user is required these routes are protected by validation middleware and returning generic responses when used by badly shaped requests. Thus every endpoint documented has a indication of what generic validation responses it will provide when used incorrectly.
+
+<span style="color:red">Bad Authorization Response (401 UNAUTHORIZED)</span>:
+
+```
+{
+    "warning": "Authorization failed. Access denied!"
+}
+```
+
+<span style="color:red">User validation no body data (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing user data entirely."
+}
+```
+
+<span style="color:red">User validation user data not complete (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Missing required email or firstname or lastname information for an user."
+}
+```
 
 #### JSON Responses
 

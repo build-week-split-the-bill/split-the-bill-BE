@@ -52,7 +52,9 @@ router.post('/', AuthMiddleware.restricted, (req, res) => {
     });
     res
       .status(201)
-      .json({ message: 'The notifications have been successfully persisted.' });
+      .json({
+        message: 'The notification(s) have been successfully persisted.',
+      });
   } else {
     res.status(400).json({
       warning:
