@@ -1,11 +1,11 @@
 # Split The Bill Backend
 
 [Visit Frontend](xxxx)
-[Visit Backend](https://split-the-bill-postgres.herokuapp.com)
+[Visit Backend](https://split-the-bill-postgres.herokuapp.com) (see endpoints below)
 
 Split the bill is a fullstack web application that has been built during the WEB20 buildweek_3 (29.07.2019-02.08.2019) by [LambdaSchool](https://lambdaschool.com/) students. Each student fulfills a role in the project to collectively build the app. (Roles listed below)
 
-Split the bill provides a web application where people can easily calculate how much they have to pay. It splits a certain bill by the amount of people and gives them an overview how much they owe. A use case would be for example at a night out in a bar. As the fun and also alcohol level rises calculating the bill becomes harder and an app takes the task away.
+Split The Bill provides a web application where people can easily calculate how much they have to pay. It splits a certain bill divided by the amount of people and gives them an overview how much they owe. A use case would be for example at a night out in a bar. As the fun and also alcohol level rises calculating the bill becomes more difficult and an app takes the tedious task away.
 
 ## Built With
 
@@ -49,6 +49,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users
 
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
+- Authorization gets validated over restricted middleware - extra responses below
 - No passwords are returned they are not even stored in the database directly
 
 <span style="color:red">Example Response (200 OK)</span>:
@@ -72,6 +73,14 @@ https://split-the-bill-postgres.herokuapp.com/api/users
 }
 ```
 
+<span style="color:red">Example Response (500 SERVER ERROR)</span>:
+
+```
+{
+    error: "An error occurred during fetching all users. That one is on us!"
+}
+```
+
 ##### <span style="color:blue">GET [AN USER BY ID]</span>
 
 ```
@@ -81,6 +90,8 @@ https://split-the-bill-postgres.herokuapp.com/api/users/1
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
 - ID is defined over the used route at the end
+- Authorization gets validated over restricted middleware - extra responses below
+- USER ID gets validated over validateUserId middleware - extra responses below
 - No passwords are returned they are not even stored in the database directly
 
 <span style="color:red">Example Response (200 OK)</span>:
@@ -94,46 +105,11 @@ https://split-the-bill-postgres.herokuapp.com/api/users/1
 }
 ```
 
-##### <span style="color:blue">GET [BILLS OF AN USER BY ID]</span>
-
-```
-https://split-the-bill-postgres.herokuapp.com/api/users/3/bills
-```
-
-- JWT protected (header) :heavy_check_mark:
-- payload (body) :x:
-- ID is defined over the used route at the end
-
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Example Response (500 SERVER ERROR)</span>:
 
 ```
 {
-    [
-        {
-            "id": 1,
-            "split_sum": 15.73,
-            "split_people_count": 3,
-            "created_at": "July 31st 2019, 11:39:09 pm",
-            "user_id": 1,
-            "user_email": "sascha.majewsky@pm.me"
-        },
-        {
-            "id": 30,
-            "split_sum": 15.5662,
-            "split_people_count": 3,
-            "created_at": "August 1st 2019, 12:41:14 pm",
-            "user_id": 1,
-            "user_email": "sascha.majewsky@pm.me"
-        },
-    ]
-}
-```
-
-<span style="color:red">Example Response (404 NOT FOUND)</span>:
-
-```
-{
-    "info": "No bills are available for the user with the id 3."
+    error: "An error occurred during fetching an user with the id 1."
 }
 ```
 
@@ -157,7 +133,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/register
 }
 ```
 
-<span style="color:red">Example Response (201 CREATED)</span>:
+<span style="color:red">Created User Response (201 CREATED)</span>:
 
 ```
 {
@@ -168,7 +144,15 @@ https://split-the-bill-postgres.herokuapp.com/api/users/register
 }
 ```
 
-<span style="color:red">Example Response (500 SERVER ERROR)</span>:
+<span style="color:red">User data not complete Response (400 BAD REQUEST)</span>:
+
+```
+{
+ "warning": "Not all information were provided to create a new user."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
 
 ```
 {
@@ -198,7 +182,7 @@ https://split-the-bill-postgres.herokuapp.com/api/users/login
 
 ```
 
-<span style="color:red">Example Response (200 OK)</span>:
+<span style="color:red">Logged In Response (200 OK)</span>:
 
 ```
 {
@@ -221,6 +205,14 @@ https://split-the-bill-postgres.herokuapp.com/api/users/login
 }
 ```
 
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during logging in an user."
+}
+```
+
 ##### <span style="color:blue">PUT [UPDATE AN USER]</span>
 
 ```
@@ -231,6 +223,9 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :heavy_check_mark:
+- Authorization gets validated over restricted middleware - extra responses below
+- USER ID gets validated over validateUserId middleware - extra responses below
+- USER gets validated over validateUser middleware - extra responses below
 
 <span style="color:green">Example Request</span>:
 
@@ -250,11 +245,72 @@ https://split-the-bill-postgres.herokuapp.com/api/users/4
 }
 ```
 
-<span style="color:red">Example Response (400 BAD REQUEST)</span>:
+<span style="color:red">Database Error Response (500 SERVER ERROR)</span>:
 
 ```
 {
-    "warning": "Missing required email or firstname or lastname information for an user."
+    "error": "An error occurred within the database thus the user with the id 1 could not be updated."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during updating the user with the id 1."
+}
+```
+
+##### <span style="color:blue">GET [BILLS OF AN USER BY ID]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/users/3/bills
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- Authorization gets validated over restricted middleware - extra responses below
+- USER ID gets validated over validateUserId middleware - extra responses below
+- ID is defined over the used route at the end
+
+<span style="color:red">Found Bills Response (200 OK)</span>:
+
+```
+{
+    [
+        {
+            "id": 1,
+            "split_sum": 15.73,
+            "split_people_count": 3,
+            "created_at": "July 31st 2019, 11:39:09 pm",
+            "user_id": 1,
+            "user_email": "sascha.majewsky@pm.me"
+        },
+        {
+            "id": 30,
+            "split_sum": 15.5662,
+            "split_people_count": 3,
+            "created_at": "August 1st 2019, 12:41:14 pm",
+            "user_id": 1,
+            "user_email": "sascha.majewsky@pm.me"
+        },
+    ]
+}
+```
+
+<span style="color:red">No bills found for the user Response (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "No bills are available for the user with the id 3."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred retrieving the bills for the user with the id 3."
 }
 ```
 
@@ -268,6 +324,7 @@ https://split-the-bill-postgres.herokuapp.com/api/bills
 
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
+- Authorization gets validated over restricted middleware - extra responses below
 
 <span style="color:red">Example Response (200 OK)</span>:
 
@@ -292,6 +349,14 @@ https://split-the-bill-postgres.herokuapp.com/api/bills
 }
 ```
 
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during fetching all bills. That one is on us!"
+}
+```
+
 ##### <span style="color:blue">GET [A BILL BY ID]</span>
 
 ```
@@ -301,6 +366,8 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
 - ID is defined over the used route at the end
+- Authorization gets validated over restricted middleware - extra responses below
+- BILL ID gets validated over validateBillId middleware - extra responses below
 
 <span style="color:red">Example Response (200 OK)</span>:
 
@@ -314,6 +381,138 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2
 }
 ```
 
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during fetching a bill with the id 2."
+}
+```
+
+##### <span style="color:blue">POST [A NEW BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :heavy_check_mark:
+- Authorization gets validated over restricted middleware - extra responses below
+- BILL gets validated over validateBill middleware - extra responses below
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"user_id": 1,
+	"split_sum": 15.56618455214584,
+	"split_people_count": 3
+}
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "id": 51,
+    "user_id": 1,
+    "split_sum": 15.5662,
+    "split_people_count": 3,
+    "created_at": "August 1st 2019, 6:19:19 pm"
+}
+```
+
+<span style="color:red">Bill info not complete Response (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Not all information were provided to create a new bill."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during the creation of a new bill."
+}
+```
+
+##### <span style="color:blue">DELETE [A BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/15
+
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :x:
+- Authorization gets validated over restricted middleware - extra responses below
+- BILL ID gets validated over validateBillId middleware - extra responses below
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The bill with the id of 2 was successfully deleted."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during deletion of a bill with the id 1."
+}
+```
+
+##### <span style="color:blue">PUT [UPDATE A BILL]</span>
+
+```
+https://split-the-bill-postgres.herokuapp.com/api/bills/4
+
+```
+
+- JWT protected (header) :heavy_check_mark:
+- payload (body) :heavy_check_mark:
+- BILL gets validated over validateBill middleware - extra responses below
+- Authorization gets validated over restricted middleware - extra responses below
+- BILL ID gets validated over validateBillId middleware - extra responses below
+
+<span style="color:green">Example Request</span>:
+
+```
+{
+	"split_sum": 400.22,
+    "split_people_count": 2,
+	"user_id": 1
+}
+```
+
+<span style="color:red">Example Response (200 OK)</span>:
+
+```
+{
+    "message": "The bill with the id 2 has been successfully updated!"
+}
+```
+
+<span style="color:red">Database Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred within the database thus the bill with the id 1 could not be updated."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during updating the bill with the id 1."
+}
+```
+
 ##### <span style="color:blue">GET [NOTIFICATIONS OF A BILL BY ID]</span>
 
 ```
@@ -323,6 +522,8 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2/notifications
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
 - ID is defined over the used route at the end
+- Authorization gets validated over restricted middleware - extra responses below
+- BILL ID gets validated over validateBillId middleware - extra responses below
 
 <span style="color:red">Example Response (200 OK)</span>:
 
@@ -349,88 +550,11 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/2/notifications
 }
 ```
 
-##### <span style="color:blue">POST [A NEW BILL]</span>
-
-```
-https://split-the-bill-postgres.herokuapp.com/api/bills/
-```
-
-- JWT protected (header) :heavy_check_mark:
-- payload (body) :heavy_check_mark:
-
-<span style="color:green">Example Request</span>:
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
 
 ```
 {
-	"user_id": 1,
-	"split_sum": 15.56618455214584,
-	"split_people_count": 3
-}
-```
-
-<span style="color:red">Example Response (200 OK)</span>:
-
-```
-{
-    "id": 51,
-    "user_id": 1,
-    "split_sum": 15.5662,
-    "split_people_count": 3,
-    "created_at": "August 1st 2019, 6:19:19 pm"
-}
-```
-
-##### <span style="color:blue">PUT [UPDATE A BILL]</span>
-
-```
-https://split-the-bill-postgres.herokuapp.com/api/bills/4
-
-```
-
-- JWT protected (header) :heavy_check_mark:
-- payload (body) :heavy_check_mark:
-
-<span style="color:green">Example Request</span>:
-
-```
-{
-	"split_sum": 400.22,
-    "split_people_count": 2,
-	"user_id": 1
-}
-```
-
-<span style="color:red">Example Response (200 OK)</span>:
-
-```
-{
-    "message": "The bill with the id 2 has been successfully updated!"
-}
-```
-
-<span style="color:red">Example Response (400 BAD REQUEST)</span>:
-
-```
-{
-    "warning": "Missing required split_sum or split_people_count or user_id information for a bill."
-}
-```
-
-##### <span style="color:blue">DELETE [A BILL]</span>
-
-```
-https://split-the-bill-postgres.herokuapp.com/api/bills/15
-
-```
-
-- JWT protected (header) :heavy_check_mark:
-- payload (body) :x:
-
-<span style="color:red">Example Response (200 OK)</span>:
-
-```
-{
-    "message": "The bill with the id of 2 was successfully deleted."
+    "error": "An error occurred during retrieving the bills for the user with the id 1."
 }
 ```
 
@@ -443,12 +567,38 @@ https://split-the-bill-postgres.herokuapp.com/api/bills/31/notifications
 
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
+- Authorization gets validated over restricted middleware - extra responses below
+- BILL ID gets validated over validateBillId middleware - extra responses below
 
 <span style="color:red">Example Response (200 OK)</span>:
 
 ```
 {
     "message": "The notification(s) for the bill with the id of 52 were successfully deleted."
+}
+```
+
+<span style="color:red">Example Response (404 NOT FOUND)</span>:
+
+```
+{
+    "info": "The bill of the id 52 does not contain any notifications."
+}
+```
+
+<span style="color:red">Database Error Deletion of a notification Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during retrieving the bills for the user with the id 52."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during the deletion for notifications for the bill with the id 52."
 }
 ```
 
@@ -462,6 +612,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :x:
+- Authorization gets validated over restricted middleware - extra responses below
 
 <span style="color:red">Example Response (200 OK)</span>:
 
@@ -482,6 +633,14 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 }
 ```
 
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during fetching all notifications. That one is on us!"
+}
+```
+
 ##### <span style="color:blue">POST [AN ARRAY OF NOTIFICATIONS]</span>
 
 ```
@@ -490,6 +649,7 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 
 - JWT protected (header) :heavy_check_mark:
 - payload (body) :heavy_check_mark:
+- BILL gets validated over validateBill middleware - extra responses below
 
 <span style="color:green">Example Request</span>:
 
@@ -505,6 +665,22 @@ https://split-the-bill-postgres.herokuapp.com/api/notifications
 ```
 {
     "message": "The notification(s) have been successfully persisted."
+}
+```
+
+<span style="color:red">Notificaiton info not complete Response (400 BAD REQUEST)</span>:
+
+```
+{
+    "warning": "Not all information were provided to create a new notification."
+}
+```
+
+<span style="color:red">Server Error Response (500 SERVER ERROR)</span>:
+
+```
+{
+    "error": "An error occurred during creating a new notification."
 }
 ```
 
