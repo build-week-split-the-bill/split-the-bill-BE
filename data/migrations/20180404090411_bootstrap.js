@@ -21,7 +21,7 @@ exports.up = function(knex) {
         .notNullable()
         .references('id')
         .inTable('users')
-        .onDelete('CASCADE')
+        .onDelete('RESTRICT')
         .onUpdate('CASCADE');
     })
     .createTable('notifications', function(bills) {
@@ -33,11 +33,11 @@ exports.up = function(knex) {
         .notNullable()
         .references('id')
         .inTable('bills')
-        .onDelete('CASCADE')
+        .onDelete('RESTRICT')
         .onUpdate('CASCADE');
     });
 };
-
+a;
 exports.down = function(knex) {
   return knex.schema
     .dropTableIfExists('notifications')

@@ -5,6 +5,7 @@ const secrets = require('../../data/secrets/secret.js');
 const moment = require('moment');
 
 const Bills = require('./bill-model.js');
+const Notification = require('./notification-model.js');
 
 const router = express.Router();
 
@@ -41,38 +42,6 @@ router.get(
       console.log(error);
       res.status(500).json({
         message: 'Error retrieving the bill.',
-      });
-    }
-  },
-);
-
-// GET ALL NOTIFICATIONS BY A BILL ID
-router.get(
-  '/:id/notifications',
-  AuthMiddleware.restricted,
-  ValidateMiddleware.validateBillId,
-  async (req, res) => {
-    const {
-      bill: { id },
-    } = req;
-    try {
-      const userBills = await Bills.findBillNotificaitons(id);
-      if (userBills && userBills.length) {
-        res.status(200).json(userBills);
-      } else {
-        res.status(404).json({
-          message: `No bills available for the user with the id ${id}.`,
-        });
-      }
-    } catch (error) {
-      const {
-        bill: { id },
-      } = req;
-      console.log(error);
-      res.status(500).json({
-        error:
-          `There was an error retrieving this bills for the user with the id ${id}.` +
-          error,
       });
     }
   },
@@ -117,7 +86,7 @@ router.post(
   },
 );
 
-// DELETE A USER
+// DELETE A BILL
 router.delete(
   '/:id',
   AuthMiddleware.restricted,
@@ -171,6 +140,79 @@ router.put(
         : null;
     } catch (error) {
       res.status(500).json('weird');
+    }
+  },
+);
+
+// GET ALL NOTIFICATIONS BY A BILL ID
+router.get(
+  '/:id/notifications',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateBillId,
+  async (req, res) => {
+    const {
+      bill: { id },
+    } = req;
+    try {
+      const userBills = await Bills.findBillNotificaitons(id);
+      if (userBills && userBills.length) {
+        res.status(200).json(userBills);
+      } else {
+        res.status(404).json({
+          message: `No bills available for the user with the id ${id}.`,
+        });
+      }
+    } catch (error) {
+      const {
+        bill: { id },
+      } = req;
+      console.log(error);
+      res.status(500).json({
+        error:
+          `There was an error retrieving this bills for the user with the id ${id}.` +
+          error,
+      });
+    }
+  },
+);
+
+// DELETE ALL NOTIFICATIONS BY BILL IS
+router.delete(
+  '/:id/notifications',
+  AuthMiddleware.restricted,
+  ValidateMiddleware.validateBillId,
+  async (req, res) => {
+    try {
+      const {
+        bill: { id },
+      } = req;
+      const billNotifications = await Bills.findBillNotificaitons(id);
+
+      billNotifications.forEach(notification => {
+        Notification.remove(notification.id)
+          .then(newNotification =>
+            console.log('deleted a notification success' + newNotification),
+          )
+          .catch(error => {
+            res
+              .status(500)
+              .json(
+                'There was an error during the deletion of new notifications. ' +
+                  error,
+              );
+          });
+      });
+      res.status(200).json({
+        message: `The notifications for the bill with the id of ${id} were successfully deleted.`,
+      });
+    } catch (error) {
+      const {
+        bill: { id },
+      } = req;
+      console.log(error);
+      res.status(500).json({
+        message: `The notifications of the bill with the id of ${id} could not be deleted.`,
+      });
     }
   },
 );
