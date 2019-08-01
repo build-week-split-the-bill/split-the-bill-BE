@@ -188,23 +188,29 @@ router.delete(
       } = req;
       const billNotifications = await Bills.findBillNotificaitons(id);
 
-      billNotifications.forEach(notification => {
-        Notification.remove(notification.id)
-          .then(newNotification =>
-            console.log('deleted a notification success' + newNotification),
-          )
-          .catch(error => {
-            res
-              .status(500)
-              .json(
-                'There was an error during the deletion of new notifications. ' +
-                  error,
-              );
-          });
-      });
-      res.status(200).json({
-        message: `The notifications for the bill with the id of ${id} were successfully deleted.`,
-      });
+      if (billNotifications && billNotifications.length) {
+        billNotifications.forEach(notification => {
+          Notification.remove(notification.id)
+            .then(newNotification =>
+              console.log('deleted a notification success' + newNotification),
+            )
+            .catch(error => {
+              res
+                .status(500)
+                .json(
+                  'There was an error during the deletion of new notifications. ' +
+                    error,
+                );
+            });
+        });
+        res.status(200).json({
+          message: `The notifications for the bill with the id of ${id} were successfully deleted.`,
+        });
+      } else {
+        res.status(202).json({
+          message: `The bill of the id ${id} does not contain any notifications.`,
+        });
+      }
     } catch (error) {
       const {
         bill: { id },
