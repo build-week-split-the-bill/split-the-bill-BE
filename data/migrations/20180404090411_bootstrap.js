@@ -33,7 +33,7 @@ exports.up = function(knex) {
         .notNullable()
         .references('id')
         .inTable('bills')
-        .onDelete('RESTRICT')
+        .onDelete('CASCADE')
         .onUpdate('CASCADE');
     });
 };
