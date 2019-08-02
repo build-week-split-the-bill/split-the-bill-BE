@@ -829,7 +829,7 @@ For testing of the server and endpoints supertest and JEST was used.
 
 - Backend Model and Planning - Directory "documentation"
 
-- [Technical Design Documentation](documentation/Technical_Design_Documentation_Wanderlust.docx)
+- [Technical Design Documentation](https://docs.google.com/document/d/14K4ZoCNov8Ba9x4Sl4H4AEkDlMSDUstCXs51d_7OFUE/edit)
 
 - [Grading/Rubric - Backend Node Students](https://www.notion.so/04382aff1e09483dac0e29446ec4ef6f?v=3c1f346ae7b04962919385e74176d883)
 
