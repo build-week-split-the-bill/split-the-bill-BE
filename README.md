@@ -1,6 +1,6 @@
 # Split The Bill Backend
 
-[Visit Frontend](https://split-the-bill-postgres.herokuapp.com)
+[Visit Frontend](https://serene-booth-8b0ed1.netlify.com/login)
 
 [Visit Backend](https://split-the-bill-postgres.herokuapp.com) (see endpoints below)
 
