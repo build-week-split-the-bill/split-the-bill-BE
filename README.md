@@ -15,7 +15,7 @@ Split The Bill provides a web application where people can easily calculate how 
 - [Express.js](https://expressjs.com/) - Lightweight web framework to bootstrap Node.js APIs
 - [SQLite](https://www.sqlite.org/index.html) - Super lightweight database to bootstrap development environments
 - [PostgreSQL](https://www.postgresql.org/) - An advanced object-relational database for production environments
-- [Knex.js](https://knexjs.org/) - An advanced object-relational database for production environments
+- [Knex.js](https://knexjs.org/) - A SQL query builder that helps abstracting migrations and DDLs for different database types into a single coherent structure
 
 - [JWT](https://jwt.io/) - JSON Web Token for authorization and client side tokens for security
 - [Moment.js](https://momentjs.com/) - Lightweight Module to handle dates and times
