@@ -1,6 +1,6 @@
 # Split The Bill Backend
 
-[Visit Frontend](xxxx)
+[Visit Frontend](https://split-the-bill-postgres.herokuapp.com)
 [Visit Backend](https://split-the-bill-postgres.herokuapp.com) (see endpoints below)
 
 Split the bill is a fullstack web application that has been built during the WEB20 buildweek_3 (29.07.2019-02.08.2019) by [LambdaSchool](https://lambdaschool.com/) students. Each student fulfills a role in the project to collectively build the app. (Roles listed below)
@@ -9,16 +9,17 @@ Split The Bill provides a web application where people can easily calculate how 
 
 ## Built With
 
-- [HTML](https://en.wikipedia.org/wiki/HTML) - Foundation of the webpage
-- [CSS](https://en.wikipedia.org/wiki/Cascading_Style_Sheets) - Styling and sizing of the webpage
-- [JSX](https://reactjs.org/docs/introducing-jsx.html) - Syntax extension to JavaScript for reactive DOM elements
 - [JavaScript](https://en.wikipedia.org/wiki/JavaScript) - Language used to make the webpage interactive
-- [React.js](https://reactjs.org/) - JavaScript library for user interfaces
-- [Redux](https://redux.js.org/) - A predictable state container for React
-- [Redux-Thunk](https://github.com/reduxjs/redux-thunk) - Redux Middleware for asynchronous state operations
-- [Axios](https://github.com/axios/axios) - Promised based HTTP client to make requests to the backend
-- [MDBReact](https://mdbootstrap.com/) - Material Design Bootstrap Framework for React
-- [Axios-Progress-Bar](https://www.npmjs.com/package/axios-progress-bar) - A library to incluse a progress bar into the webpage that makes visualizes to the user after a HTTP request how long it will take for him to wait.
+- [Node.js](https://en.wikipedia.org/wiki/JavaScript) - JavaScript runtime for executing JavaScript at the server outside the browser
+- [Express.js](https://expressjs.com/) - Lightweight web framework to bootstrap Node.js APIs
+- [SQLite](https://www.sqlite.org/index.html) - Super lightweight database to bootstrap development environments
+- [PostgreSQL](https://www.postgresql.org/) - An advanced object-relational database for production environments
+- [Knex.js](https://knexjs.org/) - An advanced object-relational database for production environments
+
+- [JWT](https://jwt.io/) - JSON Web Token for authorization and client side tokens for security
+- [Moment.js](https://momentjs.com/) - Lightweight Module to handle dates and times
+- [Supertest](https://www.npmjs.com/package/supertest) - A test module for HTTP assertions
+- [JEST](https://jestjs.io/) - Simple JavaScript testing framework
 
 # Endpoints
 
@@ -693,6 +694,12 @@ Middleware is divided into 2 different types:
 
 Whenever for a route a certain ID or Resource object like a user is required these routes are protected by validation middleware and returning generic responses when used by badly shaped requests. Thus every endpoint documented has a indication of what generic validation responses it will provide when used incorrectly.
 
+Authorization is handled through Java Web Token (JWT). A token authorizes a user to access JWT protected routes for 1 hour until it a relogin needs to happen.
+
+To submit a JWT along a HTTP request add the JWT that can be acquired through the unprotected login route and then set it as "Authorization" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxMSwiZW1haWwiOiJrZXZpbkB0ZXN0LmNvbTY2NiIsImlhdCI6MTU2NDY4MzgzMiwiZXhwIjoxNTY0Njg3NDMyfQ.t3LhcZ5VppqZMSPL4LAWcllEqKzI9nTZ8VNseMZzoVE" as a Header for the request.
+
+The JWT is randomly generated and only the specific provided one from login will be valid.
+
 <span style="color:red">Bad Authorization Response (401 UNAUTHORIZED)</span>:
 
 ```
@@ -765,8 +772,6 @@ Whenever for a route a certain ID or Resource object like a user is required the
 }
 ```
 
----
-
 <span style="color:red">Notification validation no body data (400 BAD REQUEST)</span>:
 
 ```
@@ -810,16 +815,12 @@ For JSON responses there are 4 different content types available:
 
 ## Architecture and Workflow
 
-The backend and database is handled by [Rogelio Caballero](https://github.com/rogercp) with a solution of Java Spring Boot and PostgreSQL. The backend is RESTful and will provide specific endpoints to communicate with the Frontend through HTTP requests and JSON-Objects. The backend is deployed at Heroku.
+![](documentation/db-schema.png)
 
-The Frontend is built by the authors mentioned below. It runs JavaScript and uses a State Driven Development (SDD) approach with React and React Redux. For the deployment a Continuous Deployment (CD) solution was chosen through [Netlify](https://www.netlify.com/) and then hosted under selfowned domains.
+The application is split into three tables. One User can have many bills. One bill can have many notifications. By this a single bill can have a dynamic amount of friends that don't have to be users of the platform and still get notified by email about their invoice/what their part of the total sum was.
 
-As working with 2 Frontend Developers the project progress needs to be commited in a way that keeps the amount of merge conflicts low. Thus before the project was built, design choices and modeling was done. The chosen branching strategy can be viewed [here](documentation/Branching_Strategy/branching-strategy-model.png). It was later further improved with the usage of Release Branches.
-The project is chunked in user stories/tasks which are provided to a trello board for developers to assign these for themself.
-
-Before the development started the Frontend Developers did modeling and planning for the application and created use cases, detailed technical descriptions for use cases, models of JSON-Objects and a flowchart for the states that the application can go through.
-
-For the design aspect the group had a UX Design student dedicated to it who provided a design mockup for the whole application. The Frontend Developers tried to stick as close as possible to [this mockup](https://projects.invisionapp.com/share/U6SMIHDB2VJ#/screens).
+For the backend node.js with express.js was used to bootstrap the endpoints. For the database in development environment SQLITE3 was used and for the production in deployment postgres was used. For authorization and restriction of endpoints JWT between the frontend client and the backend was used. The deployment was made on Heroku where the environmental variables are configured and tweaks via heroku cli were made.
+For testing of the server and endpoints supertest and JEST was used.
 
 ## Project Requirements and Documentation
 
