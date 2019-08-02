@@ -1,6 +1,7 @@
 # Split The Bill Backend
 
 [Visit Frontend](https://split-the-bill-postgres.herokuapp.com)
+
 [Visit Backend](https://split-the-bill-postgres.herokuapp.com) (see endpoints below)
 
 Split the bill is a fullstack web application that has been built during the WEB20 buildweek_3 (29.07.2019-02.08.2019) by [LambdaSchool](https://lambdaschool.com/) students. Each student fulfills a role in the project to collectively build the app. (Roles listed below)
@@ -824,29 +825,21 @@ For testing of the server and endpoints supertest and JEST was used.
 
 ## Project Requirements and Documentation
 
-- [Initial Design Mockup from UX Designer](https://projects.invisionapp.com/share/U6SMIHDB2VJ#/screens)
+- [Initial Project Description](https://airtable.com/shrDIdKTqxyHdZCrI/tblZdTNOY7ULU4UKz/viwLWVBRd1bS3thaa/reclsZJL05TtAdeuS?blocks=hide)
 
-- [Initial Project Description](https://docs.google.com/document/d/1HGTZDCltVTSM6LlF2qpyTJd8a17_B1iikEi_jIWlwOI/edit)
-
-- Frontend Model and Planning - Directory "documentation"
+- Backend Model and Planning - Directory "documentation"
 
 - [Technical Design Documentation](documentation/Technical_Design_Documentation_Wanderlust.docx)
 
-- [Grading/Rubric - Frontend Students](documentation/frontend-rubric-requirements.pdf)
+- [Grading/Rubric - Backend Node Students](https://www.notion.so/04382aff1e09483dac0e29446ec4ef6f?v=3c1f346ae7b04962919385e74176d883)
 
-- [Requirements and Milestones - Frontend Students](https://www.notion.so/Build-week-Schedule-and-Daily-Milestones-7f0aca2ad598459fa4492fdac9881d5b)
-
-- [Policies and Procedures](https://www.notion.so/Build-Week-Culture-Document-19e679fc1a284b668d8132dd8d7228cd)
-
-- [Daily Milestones](https://www.notion.so/Build-week-Schedule-and-Daily-Milestones-7f0aca2ad598459fa4492fdac9881d5b)
-
-- [Retroperspective (Soon)]()
+- [Requirements and Milestones](https://www.notion.so/6e719d512134435f8a89ca2862f8d3e7?v=6c8d3bd7bbcb44539f8659fc96caa906)
 
 ## Authors
 
 **Role: Backend Developer**
 
-- **[Sascha Majewsky](https://github.com/SaschaMajewsky)**
+- **[Sascha Majewsky](https://github.com/SaschaWebDev)**
 
 ## License
 

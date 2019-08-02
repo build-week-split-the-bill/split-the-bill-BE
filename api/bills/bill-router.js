@@ -120,6 +120,7 @@ router.delete(
 // UPDATE A BILL
 router.put(
   '/:id',
+  AuthMiddleware.restricted,
   ValidateMiddleware.validateBill,
   ValidateMiddleware.validateBillId,
   async (req, res) => {
