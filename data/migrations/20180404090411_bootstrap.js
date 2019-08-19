@@ -37,7 +37,7 @@ exports.up = function(knex) {
         .onUpdate('CASCADE');
     });
 };
-a;
+
 exports.down = function(knex) {
   return knex.schema
     .dropTableIfExists('notifications')
